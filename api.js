@@ -202,7 +202,7 @@ app.post('/create-render', async (req, res) => {
 
         res.json({
             message: 'Render job created successfully!',
-            jobId: jobData._id
+            jobId: jobData.uuid
         });
     } catch (error) {
         console.error('Error creating render job:', error);
@@ -210,7 +210,7 @@ app.post('/create-render', async (req, res) => {
     }
 });
 
-app.get('/job-status/:id', async (req, res) => {
+app.get('/jobs/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -223,13 +223,50 @@ app.get('/job-status/:id', async (req, res) => {
 
         if (jobData.state === 'finished') {
             const s3Url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/renders/output-${id}.mp4`;
-            res.json({ status: jobData.state, s3Url });
+            res.json({ jobData: jobData, s3Url });
         } else {
-            res.json({ status: jobData.state });
+            res.json({ jobData: jobData });
         }
     } catch (error) {
         console.error('Error fetching job status:', error);
         res.status(500).json({ error: 'Failed to fetch job status' });
+    }
+});
+
+app.get('/jobs', async (req, res) => {
+    try {
+        const response = await fetch('http://localhost:3050/api/v1/jobs', {
+            headers: {
+                'nexrender-secret': process.env.NEXRENDER_SECRET
+            }
+        });
+        const jobs = await response.json();
+
+        res.json(jobs);
+    } catch (error) {
+        console.error('Error fetching jobs:', error);
+        res.status(500).json({ error: 'Failed to fetch jobs' });
+    }
+});
+
+app.delete('/jobs/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const response = await fetch(`http://localhost:3050/api/v1/jobs/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'nexrender-secret': process.env.NEXRENDER_SECRET
+            }
+        });
+
+        const text = await response.text();
+        console.log('Response from server:', text);
+
+        res.json({ message: 'Job deleted successfully!' });
+    } catch (error) {
+        console.error('Error deleting job:', error);
+        res.status(500).json({ error: 'Failed to delete job' });
     }
 });
 
