@@ -1,0 +1,17 @@
+{
+  "name": "tranches-nexrender-server",
+  "version": "1.0.0",
+  "description": "> Note: Please use Node 20",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nexrender/server": "^1.54.3",
+    "@nexrender/worker": "^1.55.0",
+    "express": "^4.21.0"
+  }
+}
