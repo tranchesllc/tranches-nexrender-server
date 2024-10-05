@@ -1,14 +1,28 @@
 require('dotenv').config();
 
-const { start } = require('@nexrender/worker');
+const { start } = require('@nexrender/worker')
 
-start({
-    host: 'http://localhost:3050', 
-    secret: process.env.NEXRENDER_SECRET,
-    workerId: 'worker1',
-    download: { threads: 2 },
-    upload: { threads: 2 },
-    // binary: "U:\\Program Files\\Adobe After Effects 2024\\Support Files\\aerender.exe",
-})
-    .then(() => console.log('Nexrender worker is running'))
-    .catch(console.error);
+const main = async () => {
+    const serverHost = 'http://localhost:3050'
+    const serverSecret = process.env.NEXRENDER_SECRET
+
+    await start(serverHost, serverSecret, {
+        tagSelector: false,
+        addLicense: false,
+        debug: true,
+        onRenderProgress: function(job) {
+            console.log('render progress:', job.uid, job.state, job.progress);
+        },
+        onRenderError: function(job, err) {
+            console.log('render error:', job.uid, err);
+        },
+        onFinished: function(job) {
+            console.log('render finished:', job.uid);
+        },
+        onError: function(job, err) {
+            console.log('render error:', job.uid, err);
+        },
+    })
+}
+
+main().catch(console.error);
