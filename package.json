@@ -12,6 +12,10 @@
   "dependencies": {
     "@nexrender/server": "^1.54.3",
     "@nexrender/worker": "^1.55.0",
-    "express": "^4.21.0"
+    "aws-sdk": "^2.1691.0",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1"
   }
 }
