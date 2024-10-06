@@ -26,9 +26,6 @@ RUN Start-Process -FilePath .\${AE_INSTALLER} -ArgumentList '/S' -Wait
 # Copy the rest of the project files to the container
 COPY . .
 
-# Copy the .env file for AWS credentials
-COPY .env .env
-
 # Install project dependencies
 RUN npm install
 
