@@ -29,6 +29,7 @@ app.post('/create-render', async (req, res) => {
     const renderJob = {
         template: {
             src: "https://bposeats-static.s3.amazonaws.com/client-query-proposal-files/yNHQenYKrkJf88VjaWj4Pb",
+            src: "https://tranches.s3.amazonaws.com/LI-coldOutreach+5.aep",
             composition: "render",
         },
         assets: [
