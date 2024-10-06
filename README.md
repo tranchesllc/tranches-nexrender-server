@@ -14,6 +14,9 @@
 ### Setup env variables
 - ask sheldon for env variables
 
+### Install docker (optional)
+- https://www.docker.com/products/docker-desktop/
+
 ## Running the servers
 - run nexrender server `node nexrender/server.js`
 - run api `node api.js`
