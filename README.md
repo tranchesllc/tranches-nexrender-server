@@ -14,6 +14,11 @@
 ### Setup env variables
 - ask sheldon for env variables
 
+### Setup AWS
+Windows
+- your AWS credentials file (%USERPROFILE%\.aws\credentials)
+- ask sheldon for the credentials
+
 ### Install docker (optional)
 - https://www.docker.com/products/docker-desktop/
 
@@ -21,7 +26,3 @@
 - run nexrender server `node nexrender/server.js`
 - run api `node api.js`
 - run nexrender worker `node nexrender/worker.js` (Note on windows: if it's your first time running this, open cmd as an administrator then run the nexrender worker command)
-
-## Lacking
-- after effects installer
-- aws s3
