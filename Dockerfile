@@ -32,11 +32,6 @@ COPY .env .env
 # Install project dependencies
 RUN npm install
 
-# Set AWS environment variables from .env
-RUN powershell -Command " \
-    $env:AWS_ACCESS_KEY_ID=(Get-Content .env | Select-String 'AWS_ACCESS_KEY_ID' | ForEach-Object { $_ -replace 'AWS_ACCESS_KEY_ID=', '' }).Trim(); \
-    $env:AWS_SECRET_ACCESS_KEY=(Get-Content .env | Select-String 'AWS_SECRET_ACCESS_KEY' | ForEach-Object { $_ -replace 'AWS_SECRET_ACCESS_KEY=', '' }).Trim();"
-
 # Expose only the Node API port externally
 EXPOSE 3000
 
