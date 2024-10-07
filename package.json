@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.665.0",
     "@nexrender/server": "^1.54.3",
     "@nexrender/worker": "^1.55.0",
     "aws-sdk": "^2.1691.0",

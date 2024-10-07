@@ -5,6 +5,11 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2022
 ENV NODE_VERSION=20
 ENV AE_INSTALLER=installers/AfterEffects2024Installer.exe
 
+# Setup AWS credentials
+ENV AWS_ACCESS_KEY_ID="temp"
+ENV AWS_SECRET_ACCESS_KEY="temp"
+ENV AWS_REGION="us-west-2"
+
 # Set the working directory
 WORKDIR /app
 

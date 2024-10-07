@@ -1,16 +1,19 @@
-const AWS = require('aws-sdk');
-require('dotenv').config();
+const { S3Client, ListBucketsCommand } = require("@aws-sdk/client-s3");
 
-const s3 = new AWS.S3({
+const s3Client = new S3Client({ 
+  region: process.env.AWS_REGION, 
+  credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
 });
 
-s3.listBuckets((err, data) => {
-    if (err) {
-        console.log("Error", err);
-    } else {
-        console.log("Bucket List", data.Buckets);
-    }
-});
+const run = async () => {
+  try {
+    const data = await s3Client.send(new ListBucketsCommand({}));
+    console.log("Success", data.Buckets);
+  } catch (err) {
+    console.log("Error", err);
+  }
+};
+run();
