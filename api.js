@@ -2,149 +2,89 @@ require("dotenv").config();
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const AWS = require("aws-sdk");
 const fetch = require("node-fetch");
 const { v4: uuidv4 } = require("uuid");
 
-const currentPath = process.cwd();
-const assets_uri = `file:///${currentPath}/uploads/assets`;
+// const currentPath = process.cwd();
+// const assets_uri = `file:///${currentPath}/uploads/assets`;
 
 const app = express();
 app.use(bodyParser.json());
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION,
-});
+// Constants
+const REQUIRED_FIELDS = ["assets", "template_uri", "composition_name"];
+const NEXRENDER_API_URL = "http://localhost:3050/api/v1/jobs";
 
-app.post("/create-render", async (req, res) => {
-    const jobId = uuidv4();
-    // const reqBody = req.body;
-    // const assets = reqBody.assets;
-    // const templateUri = reqBody.template_uri;
-    // const compositionName = reqBody.compositionName;
+// Middleware for validation
+const validateRenderRequest = (req, res, next) => {
+    console.log("Request body:", req.body);
+    const missingFields = REQUIRED_FIELDS.filter((field) => {
+        const value = req.body[field];
+        return !value;
+    });
 
-    const renderJob = {
-        template: {
-            src: "https://bposeats-static.s3.amazonaws.com/client-query-proposal-files/yNHQenYKrkJf88VjaWj4Pb",
-            src: "https://tranches.s3.amazonaws.com/LI-coldOutreach+5.aep",
-            composition: "render",
-        },
-        assets: [
+    if (missingFields.length > 0) {
+        return res.status(400).json({
+            error: "Missing required fields",
+            missingFields,
+        });
+    }
+    next();
+};
+
+// Helper function to create render job configuration
+const createRenderJobConfig = (
+    templateUri,
+    compositionName,
+    assets,
+    jobId
+) => ({
+    template: {
+        src: templateUri,
+        composition: compositionName,
+    },
+    assets: typeof assets === "string" ? JSON.parse(assets) : assets,
+    actions: {
+        postrender: [
             {
-                type: "data",
-                layerName: "replace_Company_Name",
-                property: "Source Text",
-                value: "Wrytopia",
-                composition: "text variables",
+                module: "@nexrender/action-encode",
+                preset: "mp4",
+                output: `output-${jobId}.mp4`,
             },
             {
-                type: "data",
-                layerName: "replace_Client_Last_Name",
-                property: "Source Text",
-                value: "Sagrado",
-                composition: "text variables",
-            },
-            {
-                type: "data",
-                layerName: "replace_Client_First_Name",
-                property: "Source Text",
-                value: "Sheldon",
-                composition: "text variables",
-            },
-            {
-                type: "image",
-                layerName: "replace_Video_Intro",
-                src: `${assets_uri}/images/sample-vid.mp4`,
-            },
-            {
-                type: "image",
-                layerName: "replace_Video_Main",
-                src: `${assets_uri}/images/sample-vid.mp4`,
-            },
-            {
-                type: "image",
-                layerName: "replace_Logo_Company_Samples",
-                src: "https://tranches.s3.amazonaws.com/logo-sample.png",
-            },
-            {
-                type: "image",
-                layerName: "replace_Logo_Company_Intro",
-                src: "https://tranches.s3.amazonaws.com/logo-sample.png",
-            },
-            {
-                type: "image",
-                layerName: "replace_Logo_Company_Outro",
-                src: "https://tranches.s3.amazonaws.com/logo-sample.png",
-            },
-            {
-                type: "image",
-                layerName: "replace_Logo_Company_Sample_1",
-                src: "https://tranches.s3.amazonaws.com/logo-sample.png",
-            },
-            {
-                type: "image",
-                layerName: "replace_Logo_Company_Sample_1",
-                src: "https://tranches.s3.amazonaws.com/logo-sample.png",
-            },
-            {
-                type: "image",
-                layerName: "replace_Image_Sample_1",
-                src: `${assets_uri}/images/grass.jpeg`,
-            },
-            {
-                type: "image",
-                layerName: "replace_Image_Sample_2",
-                src: `${assets_uri}/images/grass.jpeg`,
-            },
-            {
-                type: "image",
-                layerName: "replace_Image_Sample_3",
-                src: `${assets_uri}/images/grass.jpeg`,
-            },
-            {
-                type: "image",
-                layerName: "jamie dimon.jpg",
-                src: `${assets_uri}/images/jamie dimon.jpg`,
-            },
-            {
-                type: "image",
-                layerName: "warren buffett.jpg",
-                src: `${assets_uri}/images/warren buffett.jpg`,
-            },
-            {
-                type: "image",
-                layerName: "ray dalio.jpg",
-                src: `${assets_uri}/images/ray dalio.jpg`,
+                module: "@nexrender/action-upload",
+                provider: "s3",
+                params: {
+                    bucket: process.env.S3_BUCKET_NAME,
+                    key: `renders/output-${jobId}.mp4`,
+                    region: process.env.AWS_REGION,
+                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                },
             },
         ],
-        actions: {
-            postrender: [
-                {
-                    module: "@nexrender/action-encode",
-                    preset: "mp4",
-                    output: `output-${jobId}.mp4`,
-                },
-                {
-                    module: "@nexrender/action-upload",
-                    provider: "s3",
-                    params: {
-                        bucket: process.env.S3_BUCKET_NAME,
-                        key: `renders/output-${jobId}.mp4`,
-                        region: process.env.AWS_REGION,
-                        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-                    },
-                },
-            ],
-        },
-    };
+    },
+});
+
+app.post("/create-render", validateRenderRequest, async (req, res) => {
+    const jobId = uuidv4();
+    const {
+        template_uri: templateUri,
+        composition_name: compositionName,
+        assets,
+    } = req.body;
 
     try {
+        const renderJob = createRenderJobConfig(
+            templateUri,
+            compositionName,
+            assets,
+            jobId
+        );
+
         console.log("Sending render job:", JSON.stringify(renderJob, null, 2));
 
-        const response = await fetch("http://localhost:3050/api/v1/jobs", {
+        const response = await fetch(NEXRENDER_API_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -153,18 +93,25 @@ app.post("/create-render", async (req, res) => {
             body: JSON.stringify(renderJob),
         });
 
-        const text = await response.text();
-        console.log("Response from server:", text);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-        const jobData = JSON.parse(text);
+        const jobData = await response.json();
 
-        res.json({
+        return res.json({
             message: "Render job created successfully!",
-            jobId: jobData.uuid,
+            jobId: jobData.uid,
         });
     } catch (error) {
         console.error("Error creating render job:", error);
-        res.status(500).json({ error: "Failed to create render job" });
+        return res.status(500).json({
+            error: "Failed to create render job",
+            details:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
+        });
     }
 });
 
