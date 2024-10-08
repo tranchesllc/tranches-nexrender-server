@@ -7,18 +7,14 @@ const { v4: uuidv4 } = require("uuid");
 
 const { createRenderJobConfig, installFonts } = require("./helpers/render");
 
-// const currentPath = process.cwd();
-// const assets_uri = `file:///${currentPath}/uploads/assets`;
-
 const app = express();
 app.use(bodyParser.json());
 
-// Constants
-const REQUIRED_FIELDS = ["assets", "template_uri", "composition_name"];
 const NEXRENDER_API_URL = "http://localhost:3050/api/v1/jobs";
 
 // Middleware for validation
 const validateRenderRequest = (req, res, next) => {
+    const REQUIRED_FIELDS = ["assets", "template_uri", "composition_name"];
     console.log("Request body:", req.body);
     const missingFields = REQUIRED_FIELDS.filter((field) => {
         const value = req.body[field];
