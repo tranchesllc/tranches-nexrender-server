@@ -99,11 +99,6 @@ Windows
         },
         {
             "type": "image",
-            "layerName": "replace_Logo_Company_Sample_1",
-            "src": "https://tranches.s3.amazonaws.com/assets/logo-sample.png"
-        },
-        {
-            "type": "image",
             "layerName": "replace_Image_Sample_1",
             "src": "https://tranches.s3.amazonaws.com/assets/grass.jpeg"
         },
