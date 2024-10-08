@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 const { v4: uuidv4 } = require("uuid");
 
+const { createRenderJobConfig, installFonts } = require("./helpers/render");
+
 // const currentPath = process.cwd();
 // const assets_uri = `file:///${currentPath}/uploads/assets`;
 
@@ -32,47 +34,18 @@ const validateRenderRequest = (req, res, next) => {
     next();
 };
 
-// Helper function to create render job configuration
-const createRenderJobConfig = (
-    templateUri,
-    compositionName,
-    assets,
-    jobId
-) => ({
-    template: {
-        src: templateUri,
-        composition: compositionName,
-    },
-    assets: typeof assets === "string" ? JSON.parse(assets) : assets,
-    actions: {
-        postrender: [
-            {
-                module: "@nexrender/action-encode",
-                preset: "mp4",
-                output: `output-${jobId}.mp4`,
-            },
-            {
-                module: "@nexrender/action-upload",
-                provider: "s3",
-                params: {
-                    bucket: process.env.S3_BUCKET_NAME,
-                    key: `renders/output-${jobId}.mp4`,
-                    region: process.env.AWS_REGION,
-                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-                },
-            },
-        ],
-    },
-});
-
 app.post("/create-render", validateRenderRequest, async (req, res) => {
     const jobId = uuidv4();
     const {
         template_uri: templateUri,
         composition_name: compositionName,
         assets,
+        fonts_url: fontsUrl,
     } = req.body;
+
+    if (fontsUrl) {
+        await installFonts(fontsUrl);
+    }
 
     try {
         const renderJob = createRenderJobConfig(
