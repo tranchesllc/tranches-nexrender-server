@@ -150,8 +150,6 @@ async function installFonts(fontUrls) {
     }
 }
 
-installFontFromAws("https://tranches.s3.amazonaws.com/Manrope-Regular.ttf");
-
 module.exports = {
     createRenderJobConfig,
     installFonts,
