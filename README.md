@@ -33,9 +33,10 @@ Windows
 
 ## Running the servers
 
+-   if on windows. make sure to run everything as administrator (open cmd as an administrator, navigate to project directory, then run the commands bellow)
 -   run nexrender server `node nexrender/server.js`
 -   run api `node api.js`
--   run nexrender worker `node nexrender/worker.js` (Note on windows: if it's your first time running this, open cmd as an administrator then run the nexrender worker command)
+-   run nexrender worker `node nexrender/worker.js`
 
 ### sample request post body
 
@@ -43,6 +44,7 @@ Windows
 {
     "template_uri": "https://tranches.s3.amazonaws.com/LI-coldOutreach+5.aep",
     "composition_name": "render",
+    "fonts_url": ["https://tranches.s3.amazonaws.com/Manrope-Regular.ttf"],
     "assets": [
         {
             "type": "data",

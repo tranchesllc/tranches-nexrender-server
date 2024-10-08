@@ -55,7 +55,7 @@ app.post("/create-render", validateRenderRequest, async (req, res) => {
             jobId
         );
 
-        console.log("Sending render job:", JSON.stringify(renderJob, null, 2));
+        console.log("Sending render job");
 
         const response = await fetch(NEXRENDER_API_URL, {
             method: "POST",
