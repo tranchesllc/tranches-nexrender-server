@@ -6,29 +6,13 @@ const fetch = require("node-fetch");
 const { v4: uuidv4 } = require("uuid");
 
 const { createRenderJobConfig, installFonts } = require("./helpers/render");
+const { checkAllowedUrls, validateRenderRequest } = require("./middlewares");
 
 const app = express();
 app.use(bodyParser.json());
+// app.use(checkAllowedUrls);
 
 const NEXRENDER_API_URL = "http://localhost:3050/api/v1/jobs";
-
-// Middleware for validation
-const validateRenderRequest = (req, res, next) => {
-    const REQUIRED_FIELDS = ["assets", "template_uri", "composition_name"];
-    console.log("Request body:", req.body);
-    const missingFields = REQUIRED_FIELDS.filter((field) => {
-        const value = req.body[field];
-        return !value;
-    });
-
-    if (missingFields.length > 0) {
-        return res.status(400).json({
-            error: "Missing required fields",
-            missingFields,
-        });
-    }
-    next();
-};
 
 app.post("/create-render", validateRenderRequest, async (req, res) => {
     const jobId = uuidv4();
