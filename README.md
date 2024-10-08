@@ -38,7 +38,7 @@ Windows
 -   run api `node api.js`
 -   run nexrender worker `node nexrender/worker.js`
 
-### sample request post body
+### sample request post body for rendering a video
 
 ```
 {
