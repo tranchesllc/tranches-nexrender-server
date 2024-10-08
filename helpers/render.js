@@ -55,7 +55,7 @@ async function downloadFont(fontUrl, destination) {
     });
 }
 
-// Function to install the font on the system (for MacOS and Windows example)
+// Function to install the font on the system and delete the local file
 function installFont(fontPath) {
     const platform = process.platform;
 
@@ -70,9 +70,19 @@ function installFont(fontPath) {
         exec(`cp "${fontPath}" "${destination}"`, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error installing font: ${error}`);
-                return;
+            } else {
+                console.log("Font installed successfully on MacOS");
             }
-            console.log("Font installed successfully on MacOS");
+            // Delete the local file regardless of installation success
+            fs.unlink(fontPath, (unlinkError) => {
+                if (unlinkError) {
+                    console.error(
+                        `Error deleting local font file: ${unlinkError}`
+                    );
+                } else {
+                    console.log(`Deleted local font file: ${fontPath}`);
+                }
+            });
         });
     } else if (platform === "win32") {
         // For Windows
@@ -86,15 +96,33 @@ function installFont(fontPath) {
             (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Error installing font: ${error}`);
-                    return;
+                } else {
+                    console.log("Font installed successfully on Windows");
                 }
-                console.log("Font installed successfully on Windows");
+                // Delete the local file regardless of installation success
+                fs.unlink(fontPath, (unlinkError) => {
+                    if (unlinkError) {
+                        console.error(
+                            `Error deleting local font file: ${unlinkError}`
+                        );
+                    } else {
+                        console.log(`Deleted local font file: ${fontPath}`);
+                    }
+                });
             }
         );
     } else {
         console.error(
             "Platform not supported for automatic font installation."
         );
+        // Delete the local file if platform is not supported
+        fs.unlink(fontPath, (unlinkError) => {
+            if (unlinkError) {
+                console.error(`Error deleting local font file: ${unlinkError}`);
+            } else {
+                console.log(`Deleted local font file: ${fontPath}`);
+            }
+        });
     }
 }
 
@@ -111,6 +139,8 @@ async function installFontFromAws(url) {
         installFont(localFontPath);
     } catch (error) {
         console.error("Error during font download or installation:", error);
+        // If download fails, try to delete the potentially partially downloaded file
+        fs.unlink(localFontPath, () => {});
     }
 }
 
