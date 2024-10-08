@@ -1,10 +1,10 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const server = require('@nexrender/server')
+const server = require("@nexrender/server");
 
-const port = 3050
-const secret = process.env.NEXRENDER_SECRET
+const port = 3050;
+const secret = process.env.SECRET;
 
 server.listen(port, secret, () => {
-    console.log(`Server listening on port ${port}`)
-})
+    console.log(`Server listening on port ${port}`);
+});

@@ -57,7 +57,7 @@ app.post("/create-render", validateRenderRequest, async (req, res) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "nexrender-secret": process.env.NEXRENDER_SECRET,
+                "nexrender-secret": process.env.SECRET,
             },
             body: JSON.stringify(renderJob),
         });
@@ -92,7 +92,7 @@ app.get("/jobs/:id", async (req, res) => {
             `http://localhost:3050/api/v1/jobs/${id}`,
             {
                 headers: {
-                    "nexrender-secret": process.env.NEXRENDER_SECRET,
+                    "nexrender-secret": process.env.SECRET,
                 },
             }
         );
@@ -114,7 +114,7 @@ app.get("/jobs", async (req, res) => {
     try {
         const response = await fetch("http://localhost:3050/api/v1/jobs", {
             headers: {
-                "nexrender-secret": process.env.NEXRENDER_SECRET,
+                "nexrender-secret": process.env.SECRET,
             },
         });
         const jobs = await response.json();
@@ -135,7 +135,7 @@ app.delete("/jobs/:id", async (req, res) => {
             {
                 method: "DELETE",
                 headers: {
-                    "nexrender-secret": process.env.NEXRENDER_SECRET,
+                    "nexrender-secret": process.env.SECRET,
                 },
             }
         );
