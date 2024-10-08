@@ -42,9 +42,9 @@ Windows
 
 ```
 {
-    "template_uri": "https://tranches.s3.amazonaws.com/LI-coldOutreach+5.aep",
+    "template_uri": "https://tranches.s3.amazonaws.com/templates/LI-coldOutreach+5.aep",
     "composition_name": "render",
-    "fonts_url": ["https://tranches.s3.amazonaws.com/Manrope-Regular.ttf"],
+    "fonts_url": ["https://tranches.s3.amazonaws.com/fonts/Manrope-Regular.ttf"],
     "assets": [
         {
             "type": "data",
@@ -70,67 +70,67 @@ Windows
         {
             "type": "image",
             "layerName": "replace_Video_Intro",
-            "src": "https://tranches.s3.amazonaws.com/sample-vid.mp4"
+            "src": "https://tranches.s3.amazonaws.com/assets/sample-vid.mp4"
         },
         {
             "type": "image",
             "layerName": "replace_Video_Main",
-            "src": "https://tranches.s3.amazonaws.com/sample-vid.mp4"
+            "src": "https://tranches.s3.amazonaws.com/assets/sample-vid.mp4"
         },
         {
             "type": "image",
             "layerName": "replace_Logo_Company_Samples",
-            "src": "https://tranches.s3.amazonaws.com/logo-sample.png"
+            "src": "https://tranches.s3.amazonaws.com/assets/logo-sample.png"
         },
         {
             "type": "image",
             "layerName": "replace_Logo_Company_Intro",
-            "src": "https://tranches.s3.amazonaws.com/logo-sample.png"
+            "src": "https://tranches.s3.amazonaws.com/assets/logo-sample.png"
         },
         {
             "type": "image",
             "layerName": "replace_Logo_Company_Outro",
-            "src": "https://tranches.s3.amazonaws.com/logo-sample.png"
+            "src": "https://tranches.s3.amazonaws.com/assets/logo-sample.png"
         },
         {
             "type": "image",
             "layerName": "replace_Logo_Company_Sample_1",
-            "src": "https://tranches.s3.amazonaws.com/logo-sample.png"
+            "src": "https://tranches.s3.amazonaws.com/assets/logo-sample.png"
         },
         {
             "type": "image",
             "layerName": "replace_Logo_Company_Sample_1",
-            "src": "https://tranches.s3.amazonaws.com/logo-sample.png"
+            "src": "https://tranches.s3.amazonaws.com/assets/logo-sample.png"
         },
         {
             "type": "image",
             "layerName": "replace_Image_Sample_1",
-            "src": "https://tranches.s3.amazonaws.com/grass.jpeg"
+            "src": "https://tranches.s3.amazonaws.com/assets/grass.jpeg"
         },
         {
             "type": "image",
             "layerName": "replace_Image_Sample_2",
-            "src": "https://tranches.s3.amazonaws.com/grass.jpeg"
+            "src": "https://tranches.s3.amazonaws.com/assets/grass.jpeg"
         },
         {
             "type": "image",
             "layerName": "replace_Image_Sample_3",
-            "src": "https://tranches.s3.amazonaws.com/grass.jpeg"
+            "src": "https://tranches.s3.amazonaws.com/assets/grass.jpeg"
         },
         {
             "type": "image",
             "layerName": "jamie dimon.jpg",
-            "src": "https://tranches.s3.amazonaws.com/jamie+dimon.jpg"
+            "src": "https://tranches.s3.amazonaws.com/assets/jamie+dimon.jpg"
         },
         {
             "type": "image",
             "layerName": "warren buffett.jpg",
-            "src": "https://tranches.s3.amazonaws.com/warren+buffett.jpg"
+            "src": "https://tranches.s3.amazonaws.com/assets/warren+buffett.jpg"
         },
         {
             "type": "image",
             "layerName": "ray dalio.jpg",
-            "src": "https://tranches.s3.amazonaws.com/ray+dalio.jpg"
+            "src": "https://tranches.s3.amazonaws.com/assets/ray+dalio.jpg"
         }
     ]
 }
