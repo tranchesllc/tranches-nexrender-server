@@ -21,6 +21,7 @@ app.post("/create-render", validateRenderRequest, async (req, res) => {
         composition_name: compositionName,
         assets,
         fonts_url: fontsUrl,
+        priority = 0,
     } = req.body;
 
     if (fontsUrl) {
@@ -32,7 +33,8 @@ app.post("/create-render", validateRenderRequest, async (req, res) => {
             templateUri,
             compositionName,
             assets,
-            jobId
+            jobId,
+            priority
         );
 
         console.log("Sending render job");

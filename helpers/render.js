@@ -9,7 +9,8 @@ const createRenderJobConfig = (
     templateUri,
     compositionName,
     assets,
-    jobId
+    jobId,
+    priority
 ) => ({
     template: {
         src: templateUri,
@@ -36,6 +37,7 @@ const createRenderJobConfig = (
             },
         ],
     },
+    priority: priority || 0,
 });
 
 // Helper function to download the font
