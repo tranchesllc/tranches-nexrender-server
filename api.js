@@ -5,7 +5,10 @@ const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 const { v4: uuidv4 } = require("uuid");
 
-const { createRenderJobConfig, installFonts } = require("./helpers/render");
+const {
+    createRenderJobConfig,
+    installFontFromAws,
+} = require("./helpers/render");
 const { checkAllowedUrls, validateRenderRequest } = require("./middlewares");
 
 const app = express();
@@ -14,19 +17,27 @@ app.use(bodyParser.json());
 
 const NEXRENDER_API_URL = "http://localhost:3050/api/v1/jobs";
 
+app.post("/install-font", async (req, res) => {
+    const { font_url: fontUrl } = req.body;
+
+    try {
+        const fontPath = await installFontFromAws(fontUrl);
+
+        res.json({ message: "Font installed successfully!", fontPath });
+    } catch (error) {
+        console.error("Error installing font:", error);
+        res.status(500).json({ error: "Failed to install font" });
+    }
+});
+
 app.post("/create-render", validateRenderRequest, async (req, res) => {
     const jobId = uuidv4();
     const {
         template_uri: templateUri,
         composition_name: compositionName,
         assets,
-        fonts_url: fontsUrl,
         priority = 0,
     } = req.body;
-
-    if (fontsUrl) {
-        await installFonts(fontsUrl);
-    }
 
     try {
         const renderJob = createRenderJobConfig(

@@ -155,4 +155,5 @@ async function installFonts(fontUrls) {
 module.exports = {
     createRenderJobConfig,
     installFonts,
+    installFontFromAws,
 };
