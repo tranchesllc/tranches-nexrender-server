@@ -1,4 +1,11 @@
-## Setup
+<img src="./docs/images/Logo.svg" alt="alt text" width="100%"/>
+
+# Tranches nexrender server
+
+-   [Tranches backend](https://github.com/tranchesllc/tranches-backend)
+-   [Tranches frontend](https://github.com/tranchesllc/tranches-frontend)
+
+## Setup Guide
 
 ### Make sure you have node 20 installed
 
