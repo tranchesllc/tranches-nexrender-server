@@ -10,6 +10,7 @@ const main = async () => {
         tagSelector: false,
         addLicense: false,
         debug: true,
+        maxUpdateTimeout: 60 * 3,
         onRenderProgress: function (job) {
             console.log("render progress:", job.uid, job.state, job.progress);
         },
