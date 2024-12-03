@@ -97,6 +97,7 @@ app.get("/jobs/:id", async (req, res) => {
 
         if (jobData.state === "finished") {
             const s3Url = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${jobData.actions.postrender[1].params.key}`;
+            delete jobData.actions.postrender[1].params;
             res.json({ jobData: jobData, s3Url });
         } else {
             res.json({ jobData: jobData });
