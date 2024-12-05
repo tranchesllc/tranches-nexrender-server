@@ -18,7 +18,8 @@ const validateRenderRequest = (req, res, next) => {
 };
 
 const checkAllowedUrls = (req, res, next) => {
-    const allowedUrls = [process.env.BACKEND_URL];
+    const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000/api/";
+    const allowedUrls = [BACKEND_URL];
     const origin = req.get("Origin") || req.get("Referer");
 
     // If there's no Origin or Referer header, block the request

@@ -4,7 +4,7 @@ const { installFonts } = require("../helpers/render");
 require("dotenv").config();
 
 async function installFontsFromDatabase() {
-    const BACKEND_URL = process.env.BACKEND_URL;
+    const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000/api/";
     const url = `${BACKEND_URL}fonts`;
 
     const response = await axios.get(url);
