@@ -87,29 +87,45 @@ function installFont(fontPath) {
             });
         });
     } else if (platform === "win32") {
-        // For Windows
+        // For Windows - use reg command to properly install the font
+        const fontName = path.basename(fontPath);
         const systemFontsPath = path.join(
             process.env.SYSTEMROOT,
             "Fonts",
-            path.basename(fontPath)
+            fontName
         );
+
+        // Copy font file to Windows Fonts directory
         exec(
             `copy "${fontPath}" "${systemFontsPath}"`,
-            (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error installing font: ${error}`);
-                } else {
-                    console.log("Font installed successfully on Windows");
+            (copyError, copyStdout, copyStderr) => {
+                if (copyError) {
+                    console.error(`Error copying font file: ${copyError}`);
+                    return;
                 }
-                // Delete the local file regardless of installation success
-                fs.unlink(fontPath, (unlinkError) => {
-                    if (unlinkError) {
+
+                // Add font registry entry
+                const regCommand = `reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "${fontName}" /t REG_SZ /d "${fontName}" /f`;
+
+                exec(regCommand, (regError, regStdout, regStderr) => {
+                    if (regError) {
                         console.error(
-                            `Error deleting local font file: ${unlinkError}`
+                            `Error adding font to registry: ${regError}`
                         );
                     } else {
-                        console.log(`Deleted local font file: ${fontPath}`);
+                        console.log("Font installed successfully on Windows");
                     }
+
+                    // Delete the local file
+                    fs.unlink(fontPath, (unlinkError) => {
+                        if (unlinkError) {
+                            console.error(
+                                `Error deleting local font file: ${unlinkError}`
+                            );
+                        } else {
+                            console.log(`Deleted local font file: ${fontPath}`);
+                        }
+                    });
                 });
             }
         );
