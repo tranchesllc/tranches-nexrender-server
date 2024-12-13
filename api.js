@@ -13,7 +13,7 @@ const { checkAllowedUrls, validateRenderRequest } = require("./middlewares");
 
 const app = express();
 app.use(bodyParser.json());
-app.use(checkAllowedUrls);
+// app.use(checkAllowedUrls);
 
 const NEXRENDER_API_URL = "http://localhost:3050/api/v1/jobs";
 
