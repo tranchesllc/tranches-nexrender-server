@@ -61,32 +61,7 @@ async function downloadFont(fontUrl, destination) {
 function installFont(fontPath) {
     const platform = process.platform;
 
-    if (platform === "darwin") {
-        // For MacOS
-        const destination = path.join(
-            process.env.HOME,
-            "Library",
-            "Fonts",
-            path.basename(fontPath)
-        );
-        exec(`cp "${fontPath}" "${destination}"`, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error installing font: ${error}`);
-            } else {
-                console.log("Font installed successfully on MacOS");
-            }
-            // Delete the local file regardless of installation success
-            fs.unlink(fontPath, (unlinkError) => {
-                if (unlinkError) {
-                    console.error(
-                        `Error deleting local font file: ${unlinkError}`
-                    );
-                } else {
-                    console.log(`Deleted local font file: ${fontPath}`);
-                }
-            });
-        });
-    } else if (platform === "win32") {
+    if (platform === "win32") {
         // For Windows - use reg command to properly install the font
         const fontName = path.basename(fontPath);
         const systemFontsPath = path.join(
